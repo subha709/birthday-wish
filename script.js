@@ -1,5 +1,6 @@
 const surpriseBtn = document.getElementById('surpriseBtn');
 const messageBox = document.getElementById('messageBox');
+const hiddenMessage = document.getElementById('hiddenMessage');
 const canvas = document.getElementById('confetti-canvas');
 const ctx = canvas.getContext('2d');
 const balloonsContainer = document.getElementById('balloons');
@@ -12,18 +13,32 @@ const passwordInput = document.getElementById('passwordInput');
 const passwordBtn = document.getElementById('passwordBtn');
 const passwordError = document.getElementById('passwordError');
 
-const CORRECT_PASSWORD = "HBD"; // Reset to HBD as requested
+const CORRECT_PASSWORD = "HBD";
 
 let musicStarted = false;
 let isMuted = true;
 let currentSlide = 0;
 
+// Typing effect
+function typeWriter(text, element, speed = 50) {
+    element.innerHTML = "";
+    let i = 0;
+    function type() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
 // Password check logic
 function checkPassword() {
     const entered = passwordInput.value.trim().toUpperCase();
     if (entered === CORRECT_PASSWORD) {
-        passwordScreen.classList.add('hidden');
-        // Pre-activate some objects
+        passwordScreen.style.opacity = '0';
+        setTimeout(() => passwordScreen.classList.add('hidden'), 500);
         for (let i = 0; i < 5; i++) {
             createBalloon();
         }
@@ -43,7 +58,6 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-
 window.addEventListener('resize', resizeCanvas);
 
 // Slideshow Logic
@@ -52,23 +66,22 @@ function showNextSlide() {
     currentSlide = (currentSlide + 1) % slides.length;
     slides[currentSlide].classList.add('active');
 }
-
-setInterval(showNextSlide, 3000); // Change image every 3 seconds
+setInterval(showNextSlide, 4000);
 
 function startCelebration() {
-    console.log("SURPRISE! Celebration logic starting...");
-
-    // Reveal message and hide blur cover
     messageBox.classList.add('reveal');
     blurCover.classList.add('hide');
+
+    // Typing animation for message
+    const originalText = hiddenMessage.textContent;
+    typeWriter(originalText, hiddenMessage);
 
     playMusic();
     initParticles();
     animate();
 
-    // Trigger more balloons
-    for (let i = 0; i < 15; i++) {
-        createBalloon();
+    for (let i = 0; i < 20; i++) {
+        setTimeout(createBalloon, i * 200);
     }
 }
 
@@ -79,7 +92,6 @@ function playMusic() {
         isMuted = false;
         soundToggle.innerHTML = '🔊';
     }).catch(err => {
-        console.error("Audio Playback failed:", err.message);
         soundToggle.innerHTML = '🔇';
     });
 }
@@ -89,17 +101,15 @@ soundToggle.addEventListener('click', (e) => {
     if (music.paused) {
         music.play();
         soundToggle.innerHTML = '🔊';
-        isMuted = false;
     } else {
         music.pause();
         soundToggle.innerHTML = '🔇';
-        isMuted = true;
     }
 });
 
 // Confetti System
 let particles = [];
-const colors = ['#ff4d6d', '#ff758f', '#ffb3c1', '#fdf0d5', '#00b4d8', '#ffdf5d'];
+const colors = ['#ff0055', '#7000ff', '#ffd700', '#ffffff', '#00d4ff'];
 
 class Particle {
     constructor() {
@@ -135,7 +145,7 @@ class Particle {
 
 function initParticles() {
     particles = [];
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 200; i++) {
         particles.push(new Particle());
     }
 }
@@ -149,42 +159,35 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-// Balloons Generation
 function createBalloon() {
     const balloon = document.createElement('div');
     balloon.className = 'balloon';
     const left = Math.random() * 100;
-    const duration = Math.random() * 10 + 10;
-    const size = Math.random() * 30 + 30;
+    const duration = Math.random() * 8 + 7;
+    const size = Math.random() * 30 + 40;
     const color = colors[Math.floor(Math.random() * colors.length)];
 
     balloon.style.left = `${left}%`;
     balloon.style.width = `${size}px`;
-    balloon.style.height = `${size * 1.2}px`;
+    balloon.style.height = `${size * 1.3}px`;
     balloon.style.backgroundColor = color;
+    balloon.style.boxShadow = `inset -5px -5px 15px rgba(0,0,0,0.3), 0 0 20px ${color}33`;
     balloon.style.animationDuration = `${duration}s`;
 
     balloonsContainer.appendChild(balloon);
-
-    setTimeout(() => {
-        balloon.remove();
-    }, duration * 1000);
+    setTimeout(() => balloon.remove(), duration * 1000);
 }
 
-// Initial Setup
 resizeCanvas();
-for (let i = 0; i < 15; i++) {
-    setTimeout(createBalloon, Math.random() * 5000);
-}
-setInterval(createBalloon, 2000);
+setInterval(createBalloon, 1500);
 
-// Interaction Logic
 function handleInteraction() {
     if (!musicStarted) {
         startCelebration();
         musicStarted = true;
-        surpriseBtn.innerHTML = 'Stay Awesome! 🥳';
-        surpriseBtn.style.background = 'linear-gradient(45deg, #00b4d8, #90e0ef)';
+        surpriseBtn.innerHTML = 'Endless Joy! �';
+        surpriseBtn.style.background = 'linear-gradient(45deg, #ffd700, #ffcc33)';
+        surpriseBtn.style.color = '#000';
     }
 }
 
