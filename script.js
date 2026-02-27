@@ -20,7 +20,7 @@ let currentSlide = 0;
 
 // Password check logic
 function checkPassword() {
-    const entered = passwordInput.value.trim().toUpperCase();
+    const entered = passwordInput.value.trim();
     if (entered === CORRECT_PASSWORD) {
         passwordScreen.classList.add('hidden');
         // Pre-activate some objects
