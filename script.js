@@ -12,7 +12,7 @@ const passwordInput = document.getElementById('passwordInput');
 const passwordBtn = document.getElementById('passwordBtn');
 const passwordError = document.getElementById('passwordError');
 
-const CORRECT_PASSWORD = "HBD"; // You can change this to any password you want
+const CORRECT_PASSWORD = "28022000"; // Updated per user request
 
 let musicStarted = false;
 let isMuted = true;
