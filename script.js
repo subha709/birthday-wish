@@ -117,8 +117,22 @@ soundToggle.addEventListener('click', () => {
     }
 });
 
-scratchCanvas.addEventListener('mousedown', () => isDrawing = true);
-scratchCanvas.addEventListener('touchstart', (e) => { isDrawing = true; e.preventDefault(); });
+scratchCanvas.addEventListener('mousedown', () => {
+    isDrawing = true;
+    if (!musicStarted) {
+        startCelebration();
+        musicStarted = true;
+    }
+});
+
+scratchCanvas.addEventListener('touchstart', (e) => { 
+    isDrawing = true; 
+    e.preventDefault(); 
+    if (!musicStarted) {
+        startCelebration();
+        musicStarted = true;
+    }
+});
 window.addEventListener('mouseup', () => isDrawing = false);
 window.addEventListener('touchend', () => isDrawing = false);
 scratchCanvas.addEventListener('mousemove', scratch);
