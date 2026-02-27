@@ -18,6 +18,7 @@ const CORRECT_PASSWORD = "TANI";
 let musicStarted = false;
 let isMuted = true;
 let currentSlide = 0;
+let slideInterval = null;
 
 // Typing effect
 function typeWriter(text, element, speed = 50) {
@@ -61,12 +62,20 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 
 // Slideshow Logic
+// 5 images in 1 minute 2 seconds (62 seconds) = ~12.4 seconds per image
+const SLIDE_DURATION = 12400;
+
 function showNextSlide() {
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add('active');
+    if (currentSlide < slides.length - 1) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide++;
+        slides[currentSlide].classList.add('active');
+    } else {
+        // Stop the slideshow at the last image
+        clearInterval(slideInterval);
+        console.log("Slideshow finished on last image.");
+    }
 }
-setInterval(showNextSlide, 4000);
 
 function startCelebration() {
     messageBox.classList.add('reveal');
@@ -79,6 +88,9 @@ function startCelebration() {
     playMusic();
     initParticles();
     animate();
+
+    // Start slideshow only after reveal
+    slideInterval = setInterval(showNextSlide, SLIDE_DURATION);
 
     for (let i = 0; i < 20; i++) {
         setTimeout(createBalloon, i * 200);
@@ -185,7 +197,7 @@ function handleInteraction() {
     if (!musicStarted) {
         startCelebration();
         musicStarted = true;
-        surpriseBtn.innerHTML = 'Endless Joy! �';
+        surpriseBtn.innerHTML = 'Endless Joy! 🥂';
         surpriseBtn.style.background = 'linear-gradient(45deg, #ffd700, #ffcc33)';
         surpriseBtn.style.color = '#000';
     }
