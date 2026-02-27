@@ -13,7 +13,7 @@ const passwordInput = document.getElementById('passwordInput');
 const passwordBtn = document.getElementById('passwordBtn');
 const passwordError = document.getElementById('passwordError');
 
-const CORRECT_PASSWORD = "HBD";
+const CORRECT_PASSWORD = "TANI";
 
 let musicStarted = false;
 let isMuted = true;
