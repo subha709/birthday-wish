@@ -7,10 +7,36 @@ const music = document.getElementById('birthday-music');
 const soundToggle = document.getElementById('soundToggle');
 const blurCover = document.getElementById('blurCover');
 const slides = document.querySelectorAll('.slides');
+const passwordScreen = document.getElementById('password-screen');
+const passwordInput = document.getElementById('passwordInput');
+const passwordBtn = document.getElementById('passwordBtn');
+const passwordError = document.getElementById('passwordError');
+
+const CORRECT_PASSWORD = "HBD"; // You can change this to any password you want
 
 let musicStarted = false;
 let isMuted = true;
 let currentSlide = 0;
+
+// Password check logic
+function checkPassword() {
+    const entered = passwordInput.value.trim().toUpperCase();
+    if (entered === CORRECT_PASSWORD) {
+        passwordScreen.classList.add('hidden');
+        // Pre-activate some objects
+        for (let i = 0; i < 5; i++) {
+            createBalloon();
+        }
+    } else {
+        passwordError.classList.add('show');
+        setTimeout(() => passwordError.classList.remove('show'), 3000);
+    }
+}
+
+passwordBtn.addEventListener('click', checkPassword);
+passwordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkPassword();
+});
 
 // Set canvas sizes
 function resizeCanvas() {
