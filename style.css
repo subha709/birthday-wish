@@ -102,41 +102,68 @@ body {
     margin-bottom: 2rem;
 }
 
-.scratch-container {
+.slideshow-container {
     position: relative;
     width: 100%;
-    max-width: 400px;
+    height: 300px;
     margin: 0 auto 2rem;
-    cursor: crosshair;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
 }
 
-.image-wrapper {
-    width: 100%;
-    display: block;
-}
-
-#scratch-canvas {
+.slides {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    transition: opacity 0.5s ease;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.slides.active {
+    opacity: 1;
 }
 
 .hero-image {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    transition: transform 0.5s ease;
     user-select: none;
     -webkit-user-drag: none;
 }
 
-.wish-card:hover .hero-image {
-    transform: scale(1.05);
+.blur-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(100, 100, 100, 0.5);
+    backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    transition: opacity 0.5s ease-out, visibility 0.5s;
+}
+
+.blur-cover.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.cover-text {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    pointer-events: none;
 }
 
 .magic-button {

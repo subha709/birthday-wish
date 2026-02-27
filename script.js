@@ -5,9 +5,12 @@ const ctx = canvas.getContext('2d');
 const balloonsContainer = document.getElementById('balloons');
 const music = document.getElementById('birthday-music');
 const soundToggle = document.getElementById('soundToggle');
+const blurCover = document.getElementById('blurCover');
+const slides = document.querySelectorAll('.slides');
 
 let musicStarted = false;
 let isMuted = true;
+let currentSlide = 0;
 
 // Set canvas sizes
 function resizeCanvas() {
@@ -17,11 +20,30 @@ function resizeCanvas() {
 
 window.addEventListener('resize', resizeCanvas);
 
+// Slideshow Logic
+function showNextSlide() {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+}
+
+setInterval(showNextSlide, 3000); // Change image every 3 seconds
+
 function startCelebration() {
     console.log("SURPRISE! Celebration logic starting...");
+
+    // Reveal message and hide blur cover
+    messageBox.classList.add('reveal');
+    blurCover.classList.add('hide');
+
     playMusic();
     initParticles();
     animate();
+
+    // Trigger more balloons
+    for (let i = 0; i < 15; i++) {
+        createBalloon();
+    }
 }
 
 function playMusic() {
@@ -36,7 +58,8 @@ function playMusic() {
     });
 }
 
-soundToggle.addEventListener('click', () => {
+soundToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
     if (music.paused) {
         music.play();
         soundToggle.innerHTML = '🔊';
@@ -129,19 +152,15 @@ for (let i = 0; i < 15; i++) {
 }
 setInterval(createBalloon, 2000);
 
-// Surprise Button Action
-surpriseBtn.addEventListener('click', () => {
-    messageBox.classList.add('reveal');
-    surpriseBtn.innerHTML = 'Stay Awesome! 🥳';
-    surpriseBtn.style.background = 'linear-gradient(45deg, #00b4d8, #90e0ef)';
-
+// Interaction Logic
+function handleInteraction() {
     if (!musicStarted) {
         startCelebration();
         musicStarted = true;
+        surpriseBtn.innerHTML = 'Stay Awesome! 🥳';
+        surpriseBtn.style.background = 'linear-gradient(45deg, #00b4d8, #90e0ef)';
     }
+}
 
-    // Trigger more balloons
-    for (let i = 0; i < 15; i++) {
-        createBalloon();
-    }
-});
+blurCover.addEventListener('click', handleInteraction);
+surpriseBtn.addEventListener('click', handleInteraction);
