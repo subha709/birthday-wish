@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-with, initial-scale=1.0">
+    <title>Happy Birthday! 🎈</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-container">
+        <div class="stars"></div>
+        <div class="balloons-container" id="balloons"></div>
+        <button id="soundToggle" class="sound-toggle">🔇</button>
+    </div>
+
+    <main class="wish-card" id="card">
+        <div class="content">
+            <h1 class="glow-text">Happy Birthday!</h1>
+            <p class="subtitle">Wishing you a day filled with love and laughter.</p>
+
+            <div class="scratch-container">
+                <div class="image-wrapper">
+                    <img id="birthday-image" src="birthday_hero.png" alt="Happy Birthday Illustration"
+                        class="hero-image">
+                </div>
+                <canvas id="scratch-canvas"></canvas>
+            </div>
+
+            <div class="message-box" id="messageBox">
+                <p id="hiddenMessage">"May your year be as wonderful as you are! Keep shining."</p>
+            </div>
+
+            <audio id="birthday-music" loop preload="auto" controls
+                style="margin-top: 20px; width: 100%; height: 35px; border-radius: 10px; opacity: 0.8;">
+                <source src="birthday_music.mp3" type="audio/mpeg">
+                Your browser does not support audio.
+            </audio>
+
+            <button id="surpriseBtn" class="magic-button">Tap for a Surprise ✨</button>
+        </div>
+    </main>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
