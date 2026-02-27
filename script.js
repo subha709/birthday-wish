@@ -117,6 +117,23 @@ soundToggle.addEventListener('click', () => {
     }
 });
 
+// Interaction to unlock audio on mobile
+const unlockAudio = () => {
+    if (!musicStarted) {
+        music.play().then(() => {
+            console.log("Audio Unlocked");
+            musicStarted = true;
+            isMuted = false;
+            soundToggle.innerHTML = '🔊';
+        }).catch(e => console.log("Audio check:", e));
+    }
+    document.removeEventListener('touchstart', unlockAudio);
+    document.removeEventListener('mousedown', unlockAudio);
+};
+
+document.addEventListener('touchstart', unlockAudio);
+document.addEventListener('mousedown', unlockAudio);
+
 scratchCanvas.addEventListener('mousedown', () => {
     isDrawing = true;
     if (!musicStarted) {
@@ -125,13 +142,15 @@ scratchCanvas.addEventListener('mousedown', () => {
     }
 });
 
-scratchCanvas.addEventListener('touchstart', (e) => { 
-    isDrawing = true; 
-    e.preventDefault(); 
+scratchCanvas.addEventListener('touchstart', (e) => {
+    isDrawing = true;
+    // Trigger celebration immediately to catch user gesture
     if (!musicStarted) {
         startCelebration();
         musicStarted = true;
     }
+    // Prevent default AFTER starting celebration logic
+    e.preventDefault();
 });
 window.addEventListener('mouseup', () => isDrawing = false);
 window.addEventListener('touchend', () => isDrawing = false);
