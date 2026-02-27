@@ -3,13 +3,9 @@ const messageBox = document.getElementById('messageBox');
 const canvas = document.getElementById('confetti-canvas');
 const ctx = canvas.getContext('2d');
 const balloonsContainer = document.getElementById('balloons');
-
-const scratchCanvas = document.getElementById('scratch-canvas');
-const scratchCtx = scratchCanvas.getContext('2d');
 const music = document.getElementById('birthday-music');
 const soundToggle = document.getElementById('soundToggle');
 
-let isScratched = false;
 let musicStarted = false;
 let isMuted = true;
 
@@ -17,93 +13,28 @@ let isMuted = true;
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    // Resize scratch canvas to match its container
-    const container = scratchCanvas.parentElement;
-    scratchCanvas.width = container.offsetWidth;
-    scratchCanvas.height = container.offsetHeight;
-    initScratchCanvas();
 }
 
 window.addEventListener('resize', resizeCanvas);
 
-// Initialize Scratch Canvas
-function initScratchCanvas() {
-    scratchCtx.fillStyle = '#C0C0C0'; // Silver color
-    // Create a shiny gradient
-    const grad = scratchCtx.createLinearGradient(0, 0, scratchCanvas.width, scratchCanvas.height);
-    grad.addColorStop(0, '#adb5bd');
-    grad.addColorStop(0.5, '#dee2e6');
-    grad.addColorStop(1, '#adb5bd');
-    scratchCtx.fillStyle = grad;
-    scratchCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
-
-    // Add some "scratch here" text
-    scratchCtx.fillStyle = '#6c757d';
-    scratchCtx.font = 'bold 20px Poppins';
-    scratchCtx.textAlign = 'center';
-    scratchCtx.fillText('Scratch to Reveal! ✨', scratchCanvas.width / 2, scratchCanvas.height / 2);
-}
-
-// Scratching Logic
-let isDrawing = false;
-
-function scratch(e) {
-    if (!isDrawing) return;
-
-    const rect = scratchCanvas.getBoundingClientRect();
-    const x = (e.clientX || e.touches[0].clientX) - rect.left;
-    const y = (e.clientY || e.touches[0].clientY) - rect.top;
-
-    scratchCtx.globalCompositeOperation = 'destination-out';
-    scratchCtx.beginPath();
-    scratchCtx.arc(x, y, 30, 0, Math.PI * 2);
-    scratchCtx.fill();
-
-    if (!musicStarted) {
-        startCelebration();
-        musicStarted = true;
-    }
-}
-
 function startCelebration() {
     console.log("SURPRISE! Celebration logic starting...");
     playMusic();
-
-    // Initial Confetti
     initParticles();
     animate();
 }
 
 function playMusic() {
-    console.log("Attempting to play music from:", music.currentSrc);
     music.volume = 0.8;
-
-    // Check if audio is ready
-    if (music.readyState < 2) {
-        console.warn("Audio not fully loaded yet. Waiting...");
-    }
-
     music.play().then(() => {
-        console.log("✅ Music started playing successfully!");
         musicStarted = true;
         isMuted = false;
         soundToggle.innerHTML = '🔊';
     }).catch(err => {
-        console.error("❌ Audio Playback failed:", err.message);
-        console.log("Hint: Try clicking the music player bar directly below the scratch card.");
+        console.error("Audio Playback failed:", err.message);
         soundToggle.innerHTML = '🔇';
     });
 }
-
-// Log audio load errors
-music.addEventListener('error', (e) => {
-    console.error("🔥 Audio Source Error:", music.error);
-});
-
-music.addEventListener('canplaythrough', () => {
-    console.log("📡 Audio is ready to play through without interruption.");
-});
 
 soundToggle.addEventListener('click', () => {
     if (music.paused) {
@@ -116,46 +47,6 @@ soundToggle.addEventListener('click', () => {
         isMuted = true;
     }
 });
-
-// Interaction to unlock audio on mobile
-const unlockAudio = () => {
-    if (!musicStarted) {
-        music.play().then(() => {
-            console.log("Audio Unlocked");
-            musicStarted = true;
-            isMuted = false;
-            soundToggle.innerHTML = '🔊';
-        }).catch(e => console.log("Audio check:", e));
-    }
-    document.removeEventListener('touchstart', unlockAudio);
-    document.removeEventListener('mousedown', unlockAudio);
-};
-
-document.addEventListener('touchstart', unlockAudio);
-document.addEventListener('mousedown', unlockAudio);
-
-scratchCanvas.addEventListener('mousedown', () => {
-    isDrawing = true;
-    if (!musicStarted) {
-        startCelebration();
-        musicStarted = true;
-    }
-});
-
-scratchCanvas.addEventListener('touchstart', (e) => {
-    isDrawing = true;
-    // Trigger celebration immediately to catch user gesture
-    if (!musicStarted) {
-        startCelebration();
-        musicStarted = true;
-    }
-    // Prevent default AFTER starting celebration logic
-    e.preventDefault();
-});
-window.addEventListener('mouseup', () => isDrawing = false);
-window.addEventListener('touchend', () => isDrawing = false);
-scratchCanvas.addEventListener('mousemove', scratch);
-scratchCanvas.addEventListener('touchmove', scratch);
 
 // Confetti System
 let particles = [];
@@ -238,7 +129,7 @@ for (let i = 0; i < 15; i++) {
 }
 setInterval(createBalloon, 2000);
 
-// Surprise Button Action (Manual Trigger)
+// Surprise Button Action
 surpriseBtn.addEventListener('click', () => {
     messageBox.classList.add('reveal');
     surpriseBtn.innerHTML = 'Stay Awesome! 🥳';
@@ -248,10 +139,6 @@ surpriseBtn.addEventListener('click', () => {
         startCelebration();
         musicStarted = true;
     }
-
-    // Clear and fade out scratch canvas
-    scratchCanvas.style.opacity = '0';
-    setTimeout(() => scratchCanvas.style.display = 'none', 500);
 
     // Trigger more balloons
     for (let i = 0; i < 15; i++) {
